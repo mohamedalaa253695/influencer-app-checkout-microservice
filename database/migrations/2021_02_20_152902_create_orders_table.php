@@ -18,7 +18,7 @@ class CreateOrdersTable extends Migration
             $table->string('transaction_id')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->string('code');
-            $table->string('ambassador_email');
+            $table->string('influencer_email');
             $table->string('first_name');
             $table->string('last_name');
             $table->string('email');
