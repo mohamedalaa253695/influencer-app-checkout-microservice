@@ -35,7 +35,7 @@ class OrderController extends Controller
 
             $order->code = $link->code;
             $order->user_id = $user->id;
-            $order->ambassador_email = $user->email;
+            $order->influencer_email = $user->email;
             $order->first_name = $request->input('first_name');
             $order->last_name = $request->input('last_name');
             $order->email = $request->input('email');
@@ -56,7 +56,7 @@ class OrderController extends Controller
                 $orderItem->product_title = $product->title;
                 $orderItem->price = $product->price;
                 $orderItem->quantity = $item['quantity'];
-                $orderItem->ambassador_revenue = 0.1 * $product->price * $item['quantity'];
+                $orderItem->influencer_revenue = 0.1 * $product->price * $item['quantity'];
                 $orderItem->admin_revenue = 0.9 * $product->price * $item['quantity'];
 
                 $orderItem->save();
@@ -85,11 +85,11 @@ class OrderController extends Controller
             $order->transaction_id = $source['id'];
             $order->save();
 
-            \DB::commit();
+            DB::commit();
 
             return $source;
         } catch (\Throwable $e) {
-            \DB::rollBack();
+            DB::rollBack();
 
             return response([
                 'error' => $e->getMessage()
@@ -108,13 +108,19 @@ class OrderController extends Controller
         $order->complete = 1;
         $order->save();
 
-        $array = $order->toArray();
-        $array['ambassador_revenue'] = $order->ambassador_revenue;
-        $array['order_items'] = $order->orderItems->toArray();
+        $data = $order->toArray();
+        $data['influencer_total'] = $order->influencer_total;
+        $data['admin_total'] = $order->influencer_total;
 
-        OrderCompleted::dispatch($array)->onQueue('email_topic');
-        OrderCompleted::dispatch($array)->onQueue('ambassador_topic');
-        OrderCompleted::dispatch($array)->onQueue('admin_topic');
+        $orderItems = [];
+
+        foreach ($order->orderItems as $item) {
+            $orderItems[] = $item->toArray();
+        }
+
+        OrderCompleted::dispatch($data, $orderItems)->onQueue('influencer_queue');
+        OrderCompleted::dispatch($data, $orderItems)->onQueue('email_queue');
+        // OrderCompleted::dispatch($array)->onQueue('admin_topic');
 
         return [
             'message' => 'success'
