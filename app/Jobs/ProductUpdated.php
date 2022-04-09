@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Jobs;
 
 use App\Models\Product;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,10 +12,11 @@ class ProductUpdated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $data;
+    private $data;
 
     public function __construct($data)
     {
+        // var_dump($this->data);
         $this->data = $data;
     }
 

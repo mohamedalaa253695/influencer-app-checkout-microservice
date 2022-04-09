@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bdfebb8f60982534fb2572c90256dce8",
+    "content-hash": "6f1b883eb24b3bcf4f1d8e9ea4eb05d8",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -1716,16 +1716,16 @@
         },
         {
             "name": "mohamedalaa/common",
-            "version": "0.0.1",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mohamedalaa253695/influencer-app-common.git",
-                "reference": "b0e64da1556ebaa99feb5cb47a248f6a69d50c59"
+                "reference": "6e929449171f1c8a704137a76b6d8b87e76be13b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mohamedalaa253695/influencer-app-common/zipball/b0e64da1556ebaa99feb5cb47a248f6a69d50c59",
-                "reference": "b0e64da1556ebaa99feb5cb47a248f6a69d50c59",
+                "url": "https://api.github.com/repos/mohamedalaa253695/influencer-app-common/zipball/6e929449171f1c8a704137a76b6d8b87e76be13b",
+                "reference": "6e929449171f1c8a704137a76b6d8b87e76be13b",
                 "shasum": ""
             },
             "require": {
@@ -1734,7 +1734,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Mohamed\\Common\\": "src/"
+                    "InfluencerMicroservices\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1750,9 +1750,9 @@
             "description": "This is a common package shared between influencer app microservices",
             "support": {
                 "issues": "https://github.com/mohamedalaa253695/influencer-app-common/issues",
-                "source": "https://github.com/mohamedalaa253695/influencer-app-common/tree/0.0.1"
+                "source": "https://github.com/mohamedalaa253695/influencer-app-common/tree/0.0.3"
             },
-            "time": "2022-02-25T04:49:27+00:00"
+            "time": "2022-03-07T08:51:20+00:00"
         },
         {
             "name": "monolog/monolog",

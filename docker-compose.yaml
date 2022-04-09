@@ -11,7 +11,7 @@ services:
       DB_PASSWORD: root
     command: "php artisan serve --host=0.0.0.0"
     volumes:
-      - .:/app
+      - .:/home
     ports:
       - 8002:8000
     depends_on:
@@ -20,7 +20,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: "php artisan queue:work"
+    command: "php artisan rabbitmq:consume"
+    restart: unless-stopped
     environment:
       DB_HOST: checkout_db
       DB_DATABASE: checkout

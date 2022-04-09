@@ -20,13 +20,17 @@ class Order extends Model
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getAdminRevenueAttribute()
+    public function getAdminTotalAttribute()
     {
-        return $this->orderItems->sum(fn (OrderItem $item) => $item->admin_revenue);
+        return $this->orderItems->sum(function (OrderItem $item) {
+            return $item->admin_revenue;
+        });
     }
 
-    public function getInfluencerRevenueAttribute()
+    public function getInfluencerTotalAttribute()
     {
-        return $this->orderItems->sum(fn (OrderItem $item) => $item->influencer_revenue);
+        return $this->orderItems->sum(function (OrderItem $item) {
+            return $item->influencer_revenue;
+        });
     }
 }

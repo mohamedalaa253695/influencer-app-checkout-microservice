@@ -9,7 +9,7 @@ use App\Jobs\OrderCompleted;
 use Cartalyst\Stripe\Stripe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use influencerMicroservices\UserService;
+use InfluencerMicroservices\UserService;
 
 class OrderController extends Controller
 {
@@ -26,7 +26,8 @@ class OrderController extends Controller
             abort(400, 'Invalid code');
         }
 
-        $user = $this->userService->get("users/{$link->user_id}");
+        $user = $this->userService->get($link->user_id);
+        // $user = $this->userService->get($link->user_id);
 
         try {
             DB::beginTransaction();
@@ -47,8 +48,8 @@ class OrderController extends Controller
             $order->save();
 
             $lineItems = [];
-
-            foreach ($request->input('products') as $item) {
+            // dd($request->input('items'));
+            foreach ($request->input('items') as $item) {
                 $product = Product::find($item['product_id']);
 
                 $orderItem = new OrderItem();
@@ -74,11 +75,17 @@ class OrderController extends Controller
             }
 
             $stripe = Stripe::make(env('STRIPE_SECRET'));
+            // dd([
+            //     'payment_method_types' => ['card'],
+            //     'line_items' => $lineItems,
+            //     'success_url' => env('CHECKOUT_URL') . '/success?source={CHECKOUT_SESSION_ID}',
+            //     'cancel_url' => env('CHECKOUT_URL') . '/error'
+            // ]);
 
             $source = $stripe->checkout()->sessions()->create([
                 'payment_method_types' => ['card'],
                 'line_items' => $lineItems,
-                'success_url' => env('CHECKOUT_URL') . '/success?source={CHECKOUT_SESSION_ID}',
+                'success_url' => env('CHECKOUT_URL') . '/success?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => env('CHECKOUT_URL') . '/error'
             ]);
 
@@ -86,7 +93,6 @@ class OrderController extends Controller
             $order->save();
 
             DB::commit();
-
             return $source;
         } catch (\Throwable $e) {
             DB::rollBack();
@@ -99,7 +105,8 @@ class OrderController extends Controller
 
     public function confirm(Request $request)
     {
-        if (!$order = Order::where('transaction_id', $request->input('source'))->first()) {
+        // dd('here');
+        if (!$order = Order::where('transaction_id', $request->input('session_id'))->first()) {
             return response([
                 'error' => 'Order not found!'
             ], 404);
@@ -110,17 +117,17 @@ class OrderController extends Controller
 
         $data = $order->toArray();
         $data['influencer_total'] = $order->influencer_total;
-        $data['admin_total'] = $order->influencer_total;
-
+        $data['admin_total'] = $order->admin_total;
         $orderItems = [];
 
         foreach ($order->orderItems as $item) {
             $orderItems[] = $item->toArray();
         }
+        // dd($orderItems);
 
-        OrderCompleted::dispatch($data, $orderItems)->onQueue('influencer_queue');
-        OrderCompleted::dispatch($data, $orderItems)->onQueue('email_queue');
-        // OrderCompleted::dispatch($array)->onQueue('admin_topic');
+        OrderCompleted::dispatch([$data, $orderItems])->onQueue('influencer_queue');
+        OrderCompleted::dispatch([$data, $orderItems])->onQueue('emails_queue');
+        OrderCompleted::dispatch([$data, $orderItems])->onQueue('admin_queue');
 
         return [
             'message' => 'success'

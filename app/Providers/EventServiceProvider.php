@@ -12,9 +12,9 @@ class EventServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        App::bindMethod(ProductCreated::class, '@handle', fn ($job) => $job->handle());
-        App::bindMethod(ProductUpdated::class, '@handle', fn ($job) => $job->handle());
-        App::bindMethod(ProductDeleted::class, '@handle', fn ($job) => $job->handle());
-        App::bindMethod(LinkCreated::class, '@handle', fn ($job) => $job->handle());
+        App::bindMethod(ProductCreated::class . '@handle', fn ($job) => $job->handle());
+        App::bindMethod(ProductUpdated::class . '@handle', fn ($job) => $job->handle());
+        App::bindMethod(ProductDeleted::class . '@handle', fn ($job) => $job->handle());
+        App::bindMethod(LinkCreated::class . '@handle', fn ($job) => $job->handle());
     }
 }

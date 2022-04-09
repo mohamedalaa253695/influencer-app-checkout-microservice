@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LinkController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-    Route::get('links/{code}', [CheckoutLinkController::class, 'show']);
-    Route::post('orders', [CheckoutOrderController::class, 'store']);
-    Route::post('orders/confirm', [CheckoutOrderController::class, 'confirm']);
+// dd('checkout api file');
+    Route::get('links/{code}', [LinkController::class, 'show']);
+    Route::post('orders', [OrderController::class, 'store']);
+    Route::post('orders/confirm', [OrderController::class, 'confirm']);

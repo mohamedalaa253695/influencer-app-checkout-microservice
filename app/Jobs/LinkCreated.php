@@ -4,22 +4,27 @@ namespace App\Jobs;
 use App\Models\Link;
 use App\Models\LinkProduct;
 use Illuminate\Bus\Queueable;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 
 class LinkCreated implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    private $data;
     private $link;
     private $linkProducts;
 
-    public function __construct($link, $linkProducts)
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct($data)
     {
-        $this->link = $link;
-        $this->linkProducts = $linkProducts;
+        $this->data = $data;
     }
 
     /**
@@ -29,16 +34,11 @@ class LinkCreated implements ShouldQueue
      */
     public function handle()
     {
-        // Link::create([
-        //     'id' => $this->data['id'],
-        //     'code' => $this->data['code'],
-        //     'user_id' => $this->data['user_id'],
-        //     'created_at' => $this->data['created_at'],
-        //     'updated_at' => $this->data['updated_at'],
-        // ]);
+        // echo 'Event:' . PHP_EOL;
+        // echo print_r($this->data[0]) . PHP_EOL;
+        // echo print_r($this->data[1]) . PHP_EOL;
 
-        Link::create($this->link);
-
-        LinkProduct::insert($this->data['link_products']);
+        Link::create($this->data[0]);
+        LinkProduct::insert($this->data[1]);
     }
 }
